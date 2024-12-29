@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <GridPane layoutX="18.0" layoutY="16.0" prefHeight="670.0" prefWidth="662.0" AnchorPane.bottomAnchor="16.0" AnchorPane.leftAnchor="18.0" AnchorPane.rightAnchor="520.0" AnchorPane.topAnchor="16.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints maxHeight="540.8000183105469" minHeight="0.0" prefHeight="70.39999923706054" vgrow="NEVER" />
+          <RowConstraints maxHeight="594.599983215332" minHeight="10.0" prefHeight="437.60000076293943" valignment="CENTER" vgrow="ALWAYS" />
+          <RowConstraints maxHeight="398.46668090820316" minHeight="10.0" prefHeight="161.19999999999993" vgrow="NEVER" />
+        </rowConstraints>
+         <children>
+            <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+               <children>
+                  <Button layoutX="622.0" layoutY="19.0" mnemonicParsing="false" prefHeight="46.0" prefWidth="46.0" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="0.0">
+                     <graphic>
+                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" smooth="false">
+                           <image>
+                              <Image url="@../../../../../image/search.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <TextField layoutY="19.0" prefHeight="40.0" prefWidth="602.0" AnchorPane.bottomAnchor="10.599999999999994" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="60.0" />
+                  <Text layoutY="14.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Search Product by ID or Name:" AnchorPane.bottomAnchor="52.0" AnchorPane.leftAnchor="0.0" />
+               </children>
+            </AnchorPane>
+            <AnchorPane prefHeight="415.0" prefWidth="662.0" GridPane.rowIndex="1">
+               <children>
+                  <TableView prefHeight="470.0" prefWidth="662.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <columns>
+                        <TableColumn prefWidth="75.0" resizable="false" text="ID" />
+                        <TableColumn prefWidth="320.7999725341797" resizable="false" text="Product Item" />
+                        <TableColumn minWidth="0.0" prefWidth="78.4000244140625" resizable="false" text="Quantity" />
+                        <TableColumn minWidth="0.0" prefWidth="73.59994506835938" resizable="false" text="MRP" />
+                        <TableColumn minWidth="0.0" prefWidth="113.5999755859375" resizable="false" text="Remove Item?" />
+                     </columns>
+                  </TableView>
+               </children>
+            </AnchorPane>
+            <AnchorPane prefHeight="328.0" prefWidth="662.0" GridPane.rowIndex="2">
+               <children>
+                  <GridPane layoutX="-0.19999999999999996" layoutY="8.8" prefHeight="134.0" prefWidth="278.0" AnchorPane.bottomAnchor="-1.5999999999999943" AnchorPane.leftAnchor="-0.19999999999999996" AnchorPane.topAnchor="8.8">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="163.59995727539064" minWidth="10.0" prefWidth="135.466650390625" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="163.59995727539064" minWidth="1.5999969482421932" prefWidth="34.133325195312494" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="98.93333282470704" minWidth="5.866676330566406" prefWidth="54.26667480468748" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints maxHeight="52.06668701171875" minHeight="10.0" prefHeight="14.93330078125" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="52.06668701171875" minHeight="9.33337211608887" prefHeight="15.80003662109375" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="52.06668701171875" minHeight="0.0" prefHeight="14.999963378906251" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="52.06668701171875" minHeight="10.0" prefHeight="16.4" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="71.0000244140625" minHeight="0.0" prefHeight="44.399967193603516" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="67.19998779296876" minHeight="10.0" prefHeight="32.800024414062506" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <Button mnemonicParsing="false" prefHeight="3.0" prefWidth="102.0" text="Print Receipt" textAlignment="CENTER" GridPane.halignment="LEFT" GridPane.rowIndex="5" GridPane.valignment="CENTER">
+                           <font>
+                              <Font name="Inter Regular" size="13.0" />
+                           </font>
+                        </Button>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Grand Total" wrappingWidth="145.7008514404297" GridPane.halignment="LEFT" GridPane.rowIndex="4" GridPane.valignment="CENTER">
+                           <font>
+                              <Font name="Inter Regular" size="23.0" />
+                           </font>
+                        </Text>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="price" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                           <font>
+                              <Font name="Dubai Regular" size="12.0" />
+                           </font>
+                        </Text>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="price" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                           <font>
+                              <Font name="Dubai Regular" size="12.0" />
+                           </font>
+                        </Text>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="price" textAlignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="4" GridPane.valignment="CENTER">
+                           <font>
+                              <Font name="Inter Regular" size="12.0" />
+                           </font>
+                        </Text>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="price" GridPane.columnIndex="2">
+                           <font>
+                              <Font name="Dubai Regular" size="12.0" />
+                           </font>
+                        </Text>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Sub-Total">
+                           <font>
+                              <Font name="Dubai Regular" size="12.0" />
+                           </font>
+                        </Text>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="S. G. S. T " GridPane.rowIndex="1">
+                           <font>
+                              <Font name="Dubai Regular" size="12.0" />
+                           </font>
+                        </Text>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="C. G. S. T" GridPane.rowIndex="2">
+                           <font>
+                              <Font name="Dubai Regular" size="12.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </GridPane>
+               </children>
+            </AnchorPane>
+         </children>
+      </GridPane>
+      <TextArea editable="false" layoutX="14.0" layoutY="15.2" minHeight="370.0" minWidth="300.0" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0" />
+   </children>
+</AnchorPane>
