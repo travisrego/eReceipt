@@ -19,21 +19,21 @@ import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
 
-//  Combo Box
+    //  Combo Box
     @FXML
     public SearchableComboBox<String> productComboBox;
 
-//  Table View
+    //  Table View
     @FXML
     public TableView<Product> productTable;
 
-// Adding and Deleting TableView Rows - https://www.youtube.com/watch?v=qQcr_JMxWRw
+    // Adding and Deleting TableView Rows - https://www.youtube.com/watch?v=qQcr_JMxWRw
 
-/*
-*   TableColumn<S,T>
-*   S - The type of the TableView generic type (i.e. S == TableView<S>)
-*   T - The type of the content in all cells in this TableColumn.
-*/
+    /*
+    *   TableColumn<S,T>
+    *   S - The type of the TableView generic type (i.e. S == TableView<S>)
+    *   T - The type of the content in all cells in this TableColumn.
+    */
 
     @FXML
     public TableColumn<Product, Integer> productIDColumn;
@@ -46,6 +46,11 @@ public class MainController implements Initializable {
 
     @FXML
     public TableColumn<Product, String> productPriceColumn;
+
+    // Adding Button in TableValue Cell
+    // https://www.youtube.com/watch?v=W2SjWBMRCgE
+    @FXML
+    public TableColumn<Product, Button> productRemoveColumn;
 
     ObservableList<String> products = FXCollections.observableArrayList(
             "001 - Apple", "002 - Orange", "003 - Banana", "004 - Cheese",
@@ -79,33 +84,64 @@ public class MainController implements Initializable {
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
         productComboBox.setItems(products);
 
-        // we are telling how the columns are supposed to behave
+        // We are telling how the columns are supposed to behave
+        // The name of the property should be the same as the parameter present in Product class constructor
+        // For example "ID" property is the same as the parameter constructor present in Product.java
         productIDColumn.setCellValueFactory(new PropertyValueFactory<>("ID"));
         productNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         productQuantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         productPriceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
+        productRemoveColumn.setCellValueFactory(new PropertyValueFactory<>("removeButton"));
+
     }
 
     public void onAddItem(ActionEvent actionEvent) {
+        // Extracts the product ID and Name and separates it.
         String selectedItem = productComboBox.getSelectionModel().getSelectedItem();
         String[] parts = selectedItem.split(" - ");
         String productID = parts[0];
         String productName = parts[1];
-        String quantity = "1";
-        String price = "1";
 
-        System.out.println(productID + " - " + productName + " - " + quantity + " - " + price);
+        int quantity = 1;
+        double unitPrice = 1.0;
+        boolean isAdded = false;
 
-        Product product = new Product(productID, productName, quantity, price);
+        // A list of products that gets assigned the value of products present in the product table
         ObservableList<Product> products = productTable.getItems();
-        products.add(product);
-        productTable.setItems(products);
+
+        // Checks if the product already exists in the product table
+        for (Product product : products) {
+            if (productID.equals(product.getID())) {
+                isAdded = true;
+                // Increase quantity if the product is already added
+                product.setQuantity(product.getQuantity() + 1);
+                // Increase price if the product is already added
+                product.setPrice(product.getQuantity() * unitPrice);
+                break;
+            }
+        }
+
+        if (!isAdded) {
+            System.out.println(productID + " - " + productName + " - " + quantity + " - " + unitPrice);
+
+            // Creates an object with all the product information
+            Product product = new Product(productID, productName, quantity, unitPrice, productTable);
+            // The object is added to the list of products
+            products.add(product);
+            // The product table gains all updated list of products
+            productTable.setItems(products);
+        }
+
+        // The product table is then recreated and the cells are repopulated.
+        // The table cell's values get updated
+        productTable.refresh();
     }
 
     public void onPrintClick(ActionEvent actionEvent) {
     }
 
     public void onClearItems(ActionEvent actionEvent) {
+        // Removes all the products in the table
         productTable.getItems().clear();
     }
 

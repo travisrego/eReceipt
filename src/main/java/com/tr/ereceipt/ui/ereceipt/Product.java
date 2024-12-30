@@ -1,18 +1,51 @@
 package com.tr.ereceipt.ui.ereceipt;
 
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.ObservableList;
+import javafx.scene.control.Button;
+import javafx.scene.control.TableView;
 
 public class Product {
     private final SimpleStringProperty ID;
     private final SimpleStringProperty name;
-    private final SimpleStringProperty quantity;
-    private final SimpleStringProperty price;
+    private final SimpleIntegerProperty quantity;
+    private final SimpleDoubleProperty price;
+    private final Button removeButton;
 
-    public Product(String ID, String name, String quantity, String price) {
+    // product table is passed as a parameter which helps us to utilize product table in Product class
+    public Product(String ID, String name, int quantity, double price, TableView<Product> productTable) {
         this.ID = new SimpleStringProperty(ID);
         this.name = new SimpleStringProperty(name);
-        this.quantity = new SimpleStringProperty(quantity);
-        this.price = new SimpleStringProperty(price);
+        this.quantity = new SimpleIntegerProperty(quantity);
+        this.price = new SimpleDoubleProperty(price);
+        // Creates a button for every object (row)
+        this.removeButton = new Button("Remove");
+        // Every button as its own ActionEvent that executes handleRemove
+        this.removeButton.setOnAction(_ -> handleRemove(productTable));
+    }
+
+    private void handleRemove(TableView<Product> productTable) {
+        ObservableList<Product> products = productTable.getItems();
+        double unitPrice = this.price.getValue() / this.quantity.getValue();
+
+        // Checks if the item has more than one quantity
+        if (this.quantity.getValue() > 1) {
+            // Decreases the quantity rather than removing the element
+            setQuantity(quantity.getValue() - 1);
+            // Decrease the price according to the unit price
+            setPrice(price.getValue() - unitPrice);
+            System.out.println("Product quantity updated: " + this.quantity.getValue());
+            System.out.println("Product price updated: " + this.price.getValue());
+        } else {
+            // Once the quantity is equal to 1 then the row is removed
+            products.remove(this);
+        }
+        // The revision is passed to the product table
+        productTable.setItems(products);
+        // Table is recreated and cells are repopulated
+        productTable.refresh();
     }
 
     public String getID() {
@@ -23,11 +56,11 @@ public class Product {
         return name.get();
     }
 
-    public String getQuantity() {
+    public int getQuantity() {
         return quantity.get();
     }
 
-    public String getPrice() {
+    public double getPrice() {
         return price.get();
     }
 
@@ -39,11 +72,15 @@ public class Product {
         this.name.set(name);
     }
 
-    public void setQuantity(String quantity) {
+    public void setQuantity(int quantity) {
         this.quantity.set(quantity);
     }
 
-    public void setPrice(String price) {
+    public void setPrice(double price) {
         this.price.set(price);
+    }
+
+    public Button getRemoveButton() {
+        return removeButton;
     }
 }
