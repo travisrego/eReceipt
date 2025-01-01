@@ -27,7 +27,7 @@
       </rowConstraints>
         <children>
             <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-                <Text layoutY="14.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Search Product by ID or Name:" AnchorPane.bottomAnchor="52.0" AnchorPane.leftAnchor="0.0" />
+                <Text fx:id="testLabel" layoutY="14.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Search Product by ID or Name:" AnchorPane.bottomAnchor="52.0" AnchorPane.leftAnchor="0.0" />
                 <SearchableComboBox fx:id="productComboBox" layoutY="16.0" prefHeight="40.0" prefWidth="579.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="83.0" />
             <Button layoutX="597.0" layoutY="19.0" mnemonicParsing="false" onAction="#onAddItem" prefHeight="40.0" prefWidth="65.0" text="Add Item" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="0.0" />
             </AnchorPane>
