@@ -60,39 +60,14 @@ public class MainController implements Initializable {
     @FXML
     public Text testLabel;
 
-    ObservableList<String> products = FXCollections.observableArrayList(
-            "001 - Apple", "002 - Orange", "003 - Banana", "004 - Cheese",
-            "005 - Cucumber", "006 - Bread", "007 - Milk", "008 - Butter",
-            "009 - Eggs", "010 - Chicken", "011 - Beef", "012 - Fish",
-            "013 - Rice", "014 - Pasta", "015 - Potatoes", "016 - Tomatoes",
-            "017 - Lettuce", "018 - Carrots", "019 - Onions", "020 - Garlic",
-            "021 - Ginger", "022 - Spinach", "023 - Broccoli", "024 - Peppers",
-            "025 - Zucchini", "026 - Eggplant", "027 - Mushrooms", "028 - Corn",
-            "029 - Peas", "030 - Beans", "031 - Lentils", "032 - Chickpeas",
-            "033 - Oats", "034 - Cereal", "035 - Yogurt", "036 - Cheese",
-            "037 - Ice Cream", "038 - Juice", "039 - Soda", "040 - Coffee",
-            "041 - Tea", "042 - Sugar", "043 - Salt", "044 - Pepper",
-            "045 - Vinegar", "046 - Olive Oil", "047 - Canola Oil", "048 - Butter",
-            "049 - Flour", "050 - Baking Powder", "051 - Baking Soda", "052 - Vanilla Extract",
-            "053 - Chocolate", "054 - Jam", "055 - Honey", "056 - Peanut Butter",
-            "057 - Ketchup", "058 - Mustard", "059 - Mayonnaise", "060 - Soy Sauce",
-            "061 - Hot Sauce", "062 - Rice Vinegar", "063 - Worcestershire Sauce", "064 - BBQ Sauce",
-            "065 - Salsa", "066 - Guacamole", "067 - Tortilla Chips", "068 - Crackers",
-            "069 - Bread", "070 - Bagels", "071 - English Muffins", "072 - Pancake Mix",
-            "073 - Syrup", "074 - Waffles", "075 - Frozen Pizza", "076 - Frozen Vegetables",
-            "077 - Frozen Fruit", "078 - Frozen Meals", "079 - Frozen Desserts", "080 - Soap",
-            "081 - Shampoo", "082 - Conditioner", "083 - Toothpaste", "084 - Toothbrush",
-            "085 - Floss", "086 - Mouthwash", "087 - Deodorant", "088 - Lotion",
-            "089 - Razor", "090 - Shaving Cream", "091 - Laundry Detergent", "092 - Dish Soap",
-            "093 - Sponges", "094 - Paper Towels", "095 - Toilet Paper", "096 - Trash Bags",
-            "097 - Aluminum Foil", "098 - Plastic Wrap", "099 - Sandwich Bags", "100 - Batteries"
-    );
+    ObservableList<String> products = FXCollections.observableArrayList();
 
     Connection con = null;
     ResultSet rs = null;
     PreparedStatement pst = null;
 
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
+        products.clear();
         // We are telling how the columns are supposed to behave
         // The name of the property should be the same as the parameter present in Product class constructor
         // For example "ID" property is the same as the parameter constructor present in Product.java
@@ -108,7 +83,10 @@ public class MainController implements Initializable {
             String sql = "select * from EMP";
             pst = con.prepareStatement(sql);
             rs = pst.executeQuery();
-            System.out.println(rs);
+            while (rs.next()) {
+                products.add(rs.getString(1) + " - " + rs.getString(2) + " - " + rs.getString(3) + " - " + rs.getString(4) + " - " + rs.getString(5) + " - " + rs.getString(6) + " - " + rs.getString(7) + " - " + rs.getString(8));
+            }
+            productComboBox.setItems(products);
         } catch (SQLException e) {
             System.out.println("SQLException: " + e.getMessage());
         }
