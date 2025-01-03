@@ -58,7 +58,13 @@ public class MainController implements Initializable {
     public TableColumn<Product, Button> productRemoveColumn;
 
     @FXML
-    public Text testLabel;
+    public Text subTotalLabel;
+
+    @FXML
+    public Text CGSTLabel;
+
+    @FXML
+    public Text grandTotalLabel;
 
     ObservableList<String> products = FXCollections.observableArrayList();
 
@@ -102,7 +108,7 @@ public class MainController implements Initializable {
             else {
                 // if there is data found go through every single result and add it to
                 while (rs.next()) {
-                    products.add(rs.getString(1) + " - " + rs.getString(2) + " - " + rs.getString(3));
+                    products.add(rs.getString(1) + " - " + rs.getString(2) + " - " + rs.getString(3) + " - " + rs.getString(4) );
                 }
                 productComboBox.setItems(products);
             }
@@ -128,8 +134,12 @@ public class MainController implements Initializable {
             String productID = parts[0];
             String productName = parts[1];
             double productPrice = Double.parseDouble(parts[2]);
+            String productCategory = parts[3];
             int quantity = 1;
             boolean isAdded = false;
+            double subTotal = 0.00;
+            double gst = 0.00;
+
 
             // A list of products that gets assigned the value of products present in the product table
             ObservableList<Product> products = productTable.getItems();
@@ -140,8 +150,11 @@ public class MainController implements Initializable {
                     isAdded = true;
                     // Increase quantity if the product is already added
                     product.setQuantity(product.getQuantity() + 1);
+                    System.out.println("Updated quantity: " + product.getQuantity());
                     // Increase price if the product is already added
-                    product.setPrice(product.getQuantity() * productPrice);
+                    // Rounding the price to 2 decimal places to avoid errors
+                    product.setPrice(Math.round(product.getQuantity() * productPrice * 100.0) / 100.0);
+                    System.out.println("Updated price: " + product.getPrice());
                     break;
                 }
             }
@@ -150,7 +163,7 @@ public class MainController implements Initializable {
                 System.out.println(productID + " - " + productName + " - " + quantity + " - " + productPrice);
 
                 // Creates an object with all the product information
-                Product product = new Product(productID, productName, quantity, productPrice, productTable);
+                Product product = new Product(productID, productName, quantity, productPrice, productTable, subTotalLabel, CGSTLabel);
                 // The object is added to the list of products
                 products.add(product);
                 // The product table gains all updated list of products
@@ -160,6 +173,30 @@ public class MainController implements Initializable {
             // The product table is then recreated and the cells are repopulated.
             // The table cell's values get updated
             productTable.refresh();
+
+            for (Product product : products) {
+                subTotal += product.getPrice();
+            }
+
+            subTotalLabel.setText(String.valueOf(subTotal));
+            switch (productCategory) {
+                case "Food" -> {
+                    System.out.println("GST for Food: 12%");
+                    gst = 0.12;
+                }
+                case "Essential" -> {
+                    System.out.println("GST for Essential: 5%");
+                    gst = 0.05;
+                }
+                case "Additional" -> {
+                    System.out.println("GST for Additional: 10%");
+                    gst = 0.10;
+                }
+            }
+            double gstAmount = Math.round((subTotal*gst) * 100.0) / 100.0;
+            CGSTLabel.setText(gstAmount + "");
+            double grandAmount = Math.round((gstAmount + subTotal) * 100.0) / 100.0;
+            grandTotalLabel.setText(grandAmount + "");
         }
     }
 
@@ -169,6 +206,9 @@ public class MainController implements Initializable {
     public void onClearItems() {
         // Removes all the products in the table
         productTable.getItems().clear();
+        subTotalLabel.setText("0.0");
+        CGSTLabel.setText("0.0");
+        grandTotalLabel.setText("0.0");
     }
 
     public void openGithubLink() {
