@@ -1,8 +1,6 @@
 package com.tr.ereceipt.ui.ereceipt;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 
 /*
 * Connect Database using Project Structure
@@ -11,11 +9,15 @@ import java.sql.SQLException;
 * https://www.swtestacademy.com/database-operations-javafx/
 */
 
+// Don't forget to commit your database when creating and inserting values in it
+
 public class DBUtil {
     // JDBC Driver
     private static final String JDBC_DRIVER = "oracle.jdbc.driver.OracleDriver";
     // Connection
     private static Connection con;
+    private static ResultSet rs;
+    private static PreparedStatement ps;
     // Connection String
     // String connStr = "jdbc:oracle:thin:@IP:Port/SID";
     private static final String conStr = "jdbc:oracle:thin:@localhost:1521:XE";
@@ -58,6 +60,29 @@ public class DBUtil {
                 System.out.println("Connection close failed");
             }
         }
+        if (rs != null) {
+            try {
+                rs.close();
+                System.out.println("ResultSet closed");
+            } catch (SQLException e) {
+                System.out.println("ResultSet close failed");
+            }
+        }
+        if (ps != null) {
+            try {
+                ps.close();
+                System.out.println("PreparedStatement closed");
+            } catch (SQLException e) {
+                System.out.println("PreparedStatement close failed");
+            }
+        }
     }
 
+    public static void setRs(ResultSet rs) {
+        DBUtil.rs = rs;
+    }
+
+    public static void setPs(PreparedStatement ps) {
+        DBUtil.ps = ps;
+    }
 }

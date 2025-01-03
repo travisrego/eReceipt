@@ -77,20 +77,40 @@ public class MainController implements Initializable {
         productPriceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
         productRemoveColumn.setCellValueFactory(new PropertyValueFactory<>("removeButton"));
 
+        // Don't forget to commit your database after creating and inserting values in it
+        // Trying to retrieve products from the database
         try {
+            // Using class DBUtil that has function getConnection that calls the Oracle JDBC Driver
+            // And connects using DriverManager's getConnection function which uses
+            // Connection string, username and password
             con = DBUtil.getConnection();
-            con.createStatement();
-            String sql = "select * from EMP";
-            pst = con.prepareStatement(sql);
-            rs = pst.executeQuery();
-            while (rs.next()) {
-                products.add(rs.getString(1) + " - " + rs.getString(2) + " - " + rs.getString(3) + " - " + rs.getString(4) + " - " + rs.getString(5) + " - " + rs.getString(6) + " - " + rs.getString(7) + " - " + rs.getString(8));
-            }
-            productComboBox.setItems(products);
-        } catch (SQLException e) {
-            System.out.println("SQLException: " + e.getMessage());
-        }
+            System.out.println("Connected to database");
 
+            // Prepares the SQL statement to be executed
+            pst = con.prepareStatement("select * from products");
+            System.out.println("Statement prepared: " + pst);
+
+            // Then the result is set and executed
+            rs = pst.executeQuery();
+            System.out.println("Query executed: " + rs);
+
+            // Check if there is no data found in the result set
+            // If there is no data and the table is valid, and has data in it, try commiting the table.
+            if (!rs.isBeforeFirst()) {
+                System.out.println("No data found");
+            }
+            else {
+                // if there is data found go through every single result and add it to
+                while (rs.next()) {
+                    products.add(rs.getString(1) + " - " + rs.getString(2) + " - " + rs.getString(3));
+                }
+                productComboBox.setItems(products);
+            }
+        } catch (SQLException e) {
+            System.out.println("SQL Exception: " + e.getMessage());
+        } finally {
+            DBUtil.closeConnection();
+        }
     }
 
     public void onAddItem() {
@@ -107,9 +127,8 @@ public class MainController implements Initializable {
             String[] parts = selectedItem.split(" - ");
             String productID = parts[0];
             String productName = parts[1];
-
+            double productPrice = Double.parseDouble(parts[2]);
             int quantity = 1;
-            double unitPrice = 1.0;
             boolean isAdded = false;
 
             // A list of products that gets assigned the value of products present in the product table
@@ -122,16 +141,16 @@ public class MainController implements Initializable {
                     // Increase quantity if the product is already added
                     product.setQuantity(product.getQuantity() + 1);
                     // Increase price if the product is already added
-                    product.setPrice(product.getQuantity() * unitPrice);
+                    product.setPrice(product.getQuantity() * productPrice);
                     break;
                 }
             }
 
             if (!isAdded) {
-                System.out.println(productID + " - " + productName + " - " + quantity + " - " + unitPrice);
+                System.out.println(productID + " - " + productName + " - " + quantity + " - " + productPrice);
 
                 // Creates an object with all the product information
-                Product product = new Product(productID, productName, quantity, unitPrice, productTable);
+                Product product = new Product(productID, productName, quantity, productPrice, productTable);
                 // The object is added to the list of products
                 products.add(product);
                 // The product table gains all updated list of products
