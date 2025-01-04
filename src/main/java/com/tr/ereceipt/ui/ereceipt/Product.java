@@ -14,22 +14,30 @@ public class Product {
     private final SimpleIntegerProperty quantity;
     private final SimpleDoubleProperty price;
     private final Button removeButton;
+    private final String category;
 
     // product table is passed as a parameter which helps us to utilize product table in Product class
-    public Product(String ID, String name, int quantity, double price, TableView<Product> productTable, Text subTotalLabel, Text CGSTLabel) {
+    public Product(String ID, String name, int quantity, double price, TableView<Product> productTable, Text subTotalLabel, Text CGSTLabel, Text grandTotalLabel, String category) {
         this.ID = new SimpleStringProperty(ID);
         this.name = new SimpleStringProperty(name);
         this.quantity = new SimpleIntegerProperty(quantity);
         this.price = new SimpleDoubleProperty(price);
+        this.category = category;
         // Creates a button for every object (row)
         this.removeButton = new Button("Remove");
         // Every button as its own ActionEvent that executes handleRemove
-        this.removeButton.setOnAction(_ -> handleRemove(productTable, subTotalLabel, CGSTLabel));
+        this.removeButton.setOnAction(_ -> handleRemove(productTable, subTotalLabel, CGSTLabel, grandTotalLabel));
     }
 
-    private void handleRemove(TableView<Product> productTable, Text subTotalLabel, Text CGSTLabel) {
+    private void handleRemove(TableView<Product> productTable, Text subTotalLabel, Text CGSTLabel, Text grandTotalLabel) {
         ObservableList<Product> products = productTable.getItems();
         double unitPrice = this.price.getValue() / this.quantity.getValue();
+        double totalProductPrice = 0.0;
+        String productCategory;
+        double gst = 0.0;
+        double totalGst = 0.0;
+
+        // Updating Quantity
 
         // Checks if the item has more than one quantity
         if (this.quantity.getValue() > 1) {
@@ -45,12 +53,38 @@ public class Product {
             products.remove(this);
             System.out.println("Product removed: " + this.getName());
         }
+
+        // Updating Price
+
+        for (Product product : products) {
+            totalProductPrice += product.getPrice();
+            productCategory = product.getCategory();
+            switch (productCategory) {
+                case "Food" -> {
+                    System.out.println("GST for Food: 12%");
+                    gst = 0.12;
+                }
+                case "Essential" -> {
+                    System.out.println("GST for Essential: 5%");
+                    gst = 0.05;
+                }
+                case "Additional" -> {
+                    System.out.println("GST for Additional: 10%");
+                    gst = 0.10;
+                }
+            }
+            double gstAmount = product.getPrice()*gst;
+            totalGst += gstAmount;
+        }
+
+        subTotalLabel.setText(String.format("%.2f", totalProductPrice));
+        CGSTLabel.setText(String.format("%.2f", totalGst));
+        grandTotalLabel.setText(String.format("%.2f", totalProductPrice+totalGst));
+
         // The revision is passed to the product table
         productTable.setItems(products);
         // Table is recreated and cells are repopulated
         productTable.refresh();
-        double updatedPrice = Math.round(quantity.getValue() * unitPrice * 100.0)/100.0;
-        subTotalLabel.setText(updatedPrice + "");
     }
 
     public String getID() {
@@ -88,4 +122,9 @@ public class Product {
     public Button getRemoveButton() {
         return removeButton;
     }
+
+    public String getCategory() {
+        return category;
+    }
+
 }

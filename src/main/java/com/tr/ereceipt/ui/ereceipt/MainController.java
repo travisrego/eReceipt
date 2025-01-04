@@ -108,7 +108,7 @@ public class MainController implements Initializable {
             else {
                 // if there is data found go through every single result and add it to
                 while (rs.next()) {
-                    products.add(rs.getString(1) + " - " + rs.getString(2) + " - " + rs.getString(3) + " - " + rs.getString(4) );
+                    products.add(rs.getString("PRODUCT_ID") + " - " + rs.getString("PRODUCT_NAME") + " - " + rs.getString("PRODUCT_PRICE") + " - " + rs.getString("CATEGORY") );
                 }
                 productComboBox.setItems(products);
             }
@@ -139,6 +139,8 @@ public class MainController implements Initializable {
             boolean isAdded = false;
             double subTotal = 0.00;
             double gst = 0.00;
+            double totalGst = 0.00;
+            double grandTotal;
 
 
             // A list of products that gets assigned the value of products present in the product table
@@ -160,10 +162,10 @@ public class MainController implements Initializable {
             }
 
             if (!isAdded) {
-                System.out.println(productID + " - " + productName + " - " + quantity + " - " + productPrice);
+                System.out.println(productID + " - " + productName + " - " + quantity + " - " + productPrice + " - " + productCategory);
 
                 // Creates an object with all the product information
-                Product product = new Product(productID, productName, quantity, productPrice, productTable, subTotalLabel, CGSTLabel);
+                Product product = new Product(productID, productName, quantity, productPrice, productTable, subTotalLabel, CGSTLabel, grandTotalLabel, productCategory);
                 // The object is added to the list of products
                 products.add(product);
                 // The product table gains all updated list of products
@@ -175,28 +177,30 @@ public class MainController implements Initializable {
             productTable.refresh();
 
             for (Product product : products) {
+                switch (product.getCategory()) {
+                    case "Food" -> {
+                        System.out.println("GST for Food: 12%");
+                        gst = 0.12;
+                    }
+                    case "Essential" -> {
+                        System.out.println("GST for Essential: 5%");
+                        gst = 0.05;
+                    }
+                    case "Additional" -> {
+                        System.out.println("GST for Additional: 10%");
+                        gst = 0.10;
+                    }
+                }
                 subTotal += product.getPrice();
+                double gstAmount = product.getPrice()*gst;
+                totalGst += gstAmount;
             }
 
-            subTotalLabel.setText(String.valueOf(subTotal));
-            switch (productCategory) {
-                case "Food" -> {
-                    System.out.println("GST for Food: 12%");
-                    gst = 0.12;
-                }
-                case "Essential" -> {
-                    System.out.println("GST for Essential: 5%");
-                    gst = 0.05;
-                }
-                case "Additional" -> {
-                    System.out.println("GST for Additional: 10%");
-                    gst = 0.10;
-                }
-            }
-            double gstAmount = Math.round((subTotal*gst) * 100.0) / 100.0;
-            CGSTLabel.setText(gstAmount + "");
-            double grandAmount = Math.round((gstAmount + subTotal) * 100.0) / 100.0;
-            grandTotalLabel.setText(grandAmount + "");
+            totalGst = Math.round(totalGst * 100.0) / 100.0;
+            grandTotal = Math.round((subTotal + totalGst)*100.0) / 100.0;
+            subTotalLabel.setText(subTotal + "");
+            CGSTLabel.setText(totalGst + "");
+            grandTotalLabel.setText(grandTotal + "");
         }
     }
 
@@ -206,9 +210,9 @@ public class MainController implements Initializable {
     public void onClearItems() {
         // Removes all the products in the table
         productTable.getItems().clear();
-        subTotalLabel.setText("0.0");
-        CGSTLabel.setText("0.0");
-        grandTotalLabel.setText("0.0");
+        subTotalLabel.setText("0.00");
+        CGSTLabel.setText("0.00");
+        grandTotalLabel.setText("0.00");
     }
 
     public void openGithubLink() {

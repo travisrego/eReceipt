@@ -35,11 +35,11 @@
               <children>
                   <TableView fx:id="productTable" prefHeight="446.0" prefWidth="662.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                       <columns>
-                          <TableColumn fx:id="productIDColumn" editable="false" minWidth="75.0" prefWidth="75.0" text="ID" />
+                          <TableColumn fx:id="productIDColumn" editable="false" minWidth="75.0" prefWidth="75.0" sortable="false" text="ID" />
                           <TableColumn fx:id="productNameColumn" editable="false" minWidth="320.0" prefWidth="320.0" sortable="false" text="Product Name" />
-                          <TableColumn fx:id="productQuantityColumn" minWidth="78.0" prefWidth="78.0" text="Quantity" />
+                          <TableColumn fx:id="productQuantityColumn" editable="false" minWidth="78.0" prefWidth="78.0" sortable="false" text="Quantity" />
                           <TableColumn fx:id="productPriceColumn" editable="false" minWidth="74.0" prefWidth="74.0" sortable="false" text="Price" />
-                          <TableColumn fx:id="productRemoveColumn" minWidth="114.0" prefWidth="114.0" sortable="false" text="Remove Item?" />
+                          <TableColumn fx:id="productRemoveColumn" editable="false" minWidth="114.0" prefWidth="114.0" sortable="false" text="Remove Item?" />
                       </columns>
                       <columnResizePolicy>
                           <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -120,7 +120,7 @@
                                   <Font name="Source Sans Pro Regular" size="12.0" />
                               </font>
                           </Label>
-                          <Label text="Version 25.03.01" textAlignment="CENTER" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                          <Label text="Version 25.04.01" textAlignment="CENTER" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                               <font>
                                   <Font name="Source Sans Pro Regular" size="12.0" />
                               </font>
