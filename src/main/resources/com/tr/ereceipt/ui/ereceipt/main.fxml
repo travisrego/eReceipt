@@ -142,5 +142,5 @@
           </AnchorPane>
         </children>
     </GridPane>
-    <TextArea editable="false" layoutX="14.0" layoutY="15.2" minHeight="370.0" minWidth="300.0" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0" />
+    <TextArea fx:id="receiptArea" editable="false" layoutX="14.0" layoutY="15.2" minHeight="370.0" minWidth="300.0" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0" />
 </AnchorPane>

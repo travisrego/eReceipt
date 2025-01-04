@@ -6,6 +6,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.text.Text;
 
 public class Product {
@@ -17,7 +18,7 @@ public class Product {
     private final String category;
 
     // product table is passed as a parameter which helps us to utilize product table in Product class
-    public Product(String ID, String name, int quantity, double price, TableView<Product> productTable, Text subTotalLabel, Text CGSTLabel, Text grandTotalLabel, String category) {
+    public Product(String ID, String name, int quantity, double price, TableView<Product> productTable, Text subTotalLabel, Text CGSTLabel, Text grandTotalLabel, String category, String companyName, TextArea receiptArea) {
         this.ID = new SimpleStringProperty(ID);
         this.name = new SimpleStringProperty(name);
         this.quantity = new SimpleIntegerProperty(quantity);
@@ -26,10 +27,10 @@ public class Product {
         // Creates a button for every object (row)
         this.removeButton = new Button("Remove");
         // Every button as its own ActionEvent that executes handleRemove
-        this.removeButton.setOnAction(_ -> handleRemove(productTable, subTotalLabel, CGSTLabel, grandTotalLabel));
+        this.removeButton.setOnAction(_ -> handleRemove(productTable, subTotalLabel, CGSTLabel, grandTotalLabel, companyName, receiptArea));
     }
 
-    private void handleRemove(TableView<Product> productTable, Text subTotalLabel, Text CGSTLabel, Text grandTotalLabel) {
+    private void handleRemove(TableView<Product> productTable, Text subTotalLabel, Text CGSTLabel, Text grandTotalLabel, String companyName, TextArea receiptArea) {
         ObservableList<Product> products = productTable.getItems();
         double unitPrice = this.price.getValue() / this.quantity.getValue();
         double totalProductPrice = 0.0;
@@ -81,6 +82,12 @@ public class Product {
         CGSTLabel.setText(String.format("%.2f", totalGst));
         grandTotalLabel.setText(String.format("%.2f", totalProductPrice+totalGst));
 
+        if (!products.isEmpty()) {
+            PrintableReceipt pr = new PrintableReceipt(companyName, products, receiptArea);
+        } else {
+            receiptArea.clear();
+        }
+        
         // The revision is passed to the product table
         productTable.setItems(products);
         // Table is recreated and cells are repopulated

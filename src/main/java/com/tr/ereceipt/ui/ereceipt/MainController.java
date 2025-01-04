@@ -66,11 +66,16 @@ public class MainController implements Initializable {
     @FXML
     public Text grandTotalLabel;
 
+    @FXML
+    public javafx.scene.control.TextArea receiptArea;
+
+
     ObservableList<String> products = FXCollections.observableArrayList();
 
     Connection con = null;
     ResultSet rs = null;
     PreparedStatement pst = null;
+    String companyName = "Test";
 
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
         products.clear();
@@ -143,8 +148,11 @@ public class MainController implements Initializable {
             double grandTotal;
 
 
+
             // A list of products that gets assigned the value of products present in the product table
             ObservableList<Product> products = productTable.getItems();
+
+            // Quantity and Price Update
 
             // Checks if the product already exists in the product table
             for (Product product : products) {
@@ -165,16 +173,12 @@ public class MainController implements Initializable {
                 System.out.println(productID + " - " + productName + " - " + quantity + " - " + productPrice + " - " + productCategory);
 
                 // Creates an object with all the product information
-                Product product = new Product(productID, productName, quantity, productPrice, productTable, subTotalLabel, CGSTLabel, grandTotalLabel, productCategory);
+                Product product = new Product(productID, productName, quantity, productPrice, productTable, subTotalLabel, CGSTLabel, grandTotalLabel, productCategory, companyName, receiptArea);
                 // The object is added to the list of products
                 products.add(product);
                 // The product table gains all updated list of products
                 productTable.setItems(products);
             }
-
-            // The product table is then recreated and the cells are repopulated.
-            // The table cell's values get updated
-            productTable.refresh();
 
             for (Product product : products) {
                 switch (product.getCategory()) {
@@ -201,6 +205,12 @@ public class MainController implements Initializable {
             subTotalLabel.setText(subTotal + "");
             CGSTLabel.setText(totalGst + "");
             grandTotalLabel.setText(grandTotal + "");
+
+            PrintableReceipt pr = new PrintableReceipt(companyName, products, receiptArea);
+
+            // The product table is then recreated and the cells are repopulated.
+            // The table cell's values get updated
+            productTable.refresh();
         }
     }
 
@@ -213,6 +223,7 @@ public class MainController implements Initializable {
         subTotalLabel.setText("0.00");
         CGSTLabel.setText("0.00");
         grandTotalLabel.setText("0.00");
+        receiptArea.setText("");
     }
 
     public void openGithubLink() {
