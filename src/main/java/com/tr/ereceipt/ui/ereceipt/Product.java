@@ -87,7 +87,7 @@ public class Product {
         } else {
             receiptArea.clear();
         }
-        
+
         // The revision is passed to the product table
         productTable.setItems(products);
         // Table is recreated and cells are repopulated

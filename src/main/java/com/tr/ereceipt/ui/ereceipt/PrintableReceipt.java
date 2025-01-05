@@ -29,6 +29,8 @@ public class PrintableReceipt {
         int nameColumnWidth = Math.max(20, maxNameLength);
         int separatorLength = 6 + 4 + nameColumnWidth + 10 + 4;
 
+        receiptText.append("\n");
+
         // Receipt Header
         receiptText.append("-".repeat(separatorLength)).append("\n");
         receiptText.append(companyName).append("\n");

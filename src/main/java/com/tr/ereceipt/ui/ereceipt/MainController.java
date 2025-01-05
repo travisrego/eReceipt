@@ -4,11 +4,14 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.print.*;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Text;
+import javafx.scene.control.TextArea;
 import org.controlsfx.control.SearchableComboBox;
 
 import java.awt.*;
@@ -67,7 +70,7 @@ public class MainController implements Initializable {
     public Text grandTotalLabel;
 
     @FXML
-    public javafx.scene.control.TextArea receiptArea;
+    public TextArea receiptArea;
 
 
     ObservableList<String> products = FXCollections.observableArrayList();
@@ -214,7 +217,34 @@ public class MainController implements Initializable {
         }
     }
 
+    // Assuming receiptArea is defined somewhere in your code
     public void onPrintClick() {
+        /*
+          https://forums.codeguru.com/showthread.php?41816-I-want-to-implement-a-print-button-that-prints-a-textarea
+          This gave me an idea to convert the receiptArea to graphics image
+          After that I read the Java docs which mentioned that printPage accepts only nodes
+          Then I got an idea to convert receiptArea to a node
+         */
+        Node node = new Text(receiptArea.getText());
+        PrinterJob printerJob = PrinterJob.createPrinterJob();
+        /*
+        * https://stackoverflow.com/questions/78341553/printing-multiple-anchorpanes-on-their-own-pages/78348066#78348066
+        * */
+        Printer printer = Printer.getDefaultPrinter();
+        PageLayout pageLayout = printerJob.getPrinter().createPageLayout(Paper.A6, PageOrientation.LANDSCAPE, 0, 0, 0, 0);
+        printerJob.setPrinter(printer);
+
+        boolean proceed = printerJob.showPrintDialog(receiptArea.getScene().getWindow());
+        if (proceed) {
+            boolean success = printerJob.printPage(pageLayout, node);
+            if (success) {
+                printerJob.endJob();
+            } else {
+                System.out.println("Printing failed");
+            }
+        } else {
+            System.out.println("User cancelled printing");
+        }
     }
 
     public void onClearItems() {
