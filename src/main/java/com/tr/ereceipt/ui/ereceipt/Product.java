@@ -17,7 +17,7 @@ public class Product {
     private final Button removeButton;
     private final String category;
 
-    // product table is passed as a parameter which helps us to utilize product table in Product class
+    // product table is passed as a parameter which helps us to use product table in Product class
     public Product(String ID, String name, int quantity, double price, TableView<Product> productTable, Text subTotalLabel, Text CGSTLabel, Text grandTotalLabel, String category, String companyName, TextArea receiptArea) {
         this.ID = new SimpleStringProperty(ID);
         this.name = new SimpleStringProperty(name);
@@ -49,7 +49,7 @@ public class Product {
             System.out.println("Product quantity updated: " + this.quantity.getValue());
             System.out.println("Product price updated: " + this.price.getValue());
         } else {
-            // Once the quantity is equal to 1 then the row is removed
+            // Once the quantity is equal to 1, then the row is removed
             setQuantity(quantity.getValue() - 1);
             products.remove(this);
             System.out.println("Product removed: " + this.getName());
@@ -83,7 +83,8 @@ public class Product {
         grandTotalLabel.setText(String.format("%.2f", totalProductPrice+totalGst));
 
         if (!products.isEmpty()) {
-            PrintableReceipt pr = new PrintableReceipt(companyName, products, receiptArea);
+            PrintableReceipt pr = new PrintableReceipt(companyName, receiptArea);
+            pr.printReceipt(products);
         } else {
             receiptArea.clear();
         }

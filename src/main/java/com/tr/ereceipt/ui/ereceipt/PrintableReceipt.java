@@ -9,12 +9,11 @@ public class PrintableReceipt {
     private double subTotal;
     private double totalCGST;
 
-    public PrintableReceipt(String companyName, ObservableList<Product> products, TextArea receiptArea) {
+    public PrintableReceipt(String companyName, TextArea receiptArea) {
         this.companyName = companyName;
         this.receiptArea = receiptArea;
         this.subTotal = 0;
         this.totalCGST = 0;
-        printReceipt(products);
     }
 
 

@@ -3,15 +3,20 @@ package com.tr.ereceipt.ui.ereceipt;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.print.*;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.control.TextArea;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import org.controlsfx.control.SearchableComboBox;
 
 import java.awt.*;
@@ -38,8 +43,8 @@ public class MainController implements Initializable {
     // Adding and Deleting TableView Rows - https://www.youtube.com/watch?v=qQcr_JMxWRw
 
     /*
-    *   TableColumn<S,T>
-    *   S - The type of the TableView generic type (i.e. S == TableView<S>)
+    *   TableColumn<S, T>
+    *   S - The type of the TableView generic type (i.e., S == TableView<S>)
     *   T - The type of the content in all cells in this TableColumn.
     */
 
@@ -72,30 +77,30 @@ public class MainController implements Initializable {
     @FXML
     public TextArea receiptArea;
 
-
     ObservableList<String> products = FXCollections.observableArrayList();
 
     Connection con = null;
     ResultSet rs = null;
     PreparedStatement pst = null;
-    String companyName = "Test";
+    SerializeData serializeData = new SerializeData();
+
 
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
         products.clear();
         // We are telling how the columns are supposed to behave
-        // The name of the property should be the same as the parameter present in Product class constructor
-        // For example "ID" property is the same as the parameter constructor present in Product.java
+        // The name of the property should be the same as the parameter present in Product class constructor,
+        // For example, "ID" property is the same as the parameter constructor present in Product.java
         productIDColumn.setCellValueFactory(new PropertyValueFactory<>("ID"));
         productNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         productQuantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         productPriceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
         productRemoveColumn.setCellValueFactory(new PropertyValueFactory<>("removeButton"));
 
-        // Don't forget to commit your database after creating and inserting values in it
+        // Remember to commit your database after creating and inserting values in it
         // Trying to retrieve products from the database
         try {
             // Using class DBUtil that has function getConnection that calls the Oracle JDBC Driver
-            // And connects using DriverManager's getConnection function which uses
+            // And connects using DriverManager's getConnection function, which uses
             // Connection string, username and password
             con = DBUtil.getConnection();
             System.out.println("Connected to database");
@@ -114,7 +119,7 @@ public class MainController implements Initializable {
                 System.out.println("No data found");
             }
             else {
-                // if there is data found go through every single result and add it to
+                // if there is data found, go through every single result and add it to
                 while (rs.next()) {
                     products.add(rs.getString("PRODUCT_ID") + " - " + rs.getString("PRODUCT_NAME") + " - " + rs.getString("PRODUCT_PRICE") + " - " + rs.getString("CATEGORY") );
                 }
@@ -149,8 +154,14 @@ public class MainController implements Initializable {
             double gst = 0.00;
             double totalGst = 0.00;
             double grandTotal;
+            String companyName;
 
-
+            if (getCompanyName() == null) {
+                companyName = "{Company Name}";
+            }
+            else {
+                companyName = getCompanyName();
+            }
 
             // A list of products that gets assigned the value of products present in the product table
             ObservableList<Product> products = productTable.getItems();
@@ -164,7 +175,7 @@ public class MainController implements Initializable {
                     // Increase quantity if the product is already added
                     product.setQuantity(product.getQuantity() + 1);
                     System.out.println("Updated quantity: " + product.getQuantity());
-                    // Increase price if the product is already added
+                    // Increase the price if the product is already added
                     // Rounding the price to 2 decimal places to avoid errors
                     product.setPrice(Math.round(product.getQuantity() * productPrice * 100.0) / 100.0);
                     System.out.println("Updated price: " + product.getPrice());
@@ -209,7 +220,8 @@ public class MainController implements Initializable {
             CGSTLabel.setText(totalGst + "");
             grandTotalLabel.setText(grandTotal + "");
 
-            PrintableReceipt pr = new PrintableReceipt(companyName, products, receiptArea);
+            PrintableReceipt pr = new PrintableReceipt(companyName, receiptArea);
+            pr.printReceipt(products);
 
             // The product table is then recreated and the cells are repopulated.
             // The table cell's values get updated
@@ -222,7 +234,7 @@ public class MainController implements Initializable {
         /*
           https://forums.codeguru.com/showthread.php?41816-I-want-to-implement-a-print-button-that-prints-a-textarea
           This gave me an idea to convert the receiptArea to graphics image
-          After that I read the Java docs which mentioned that printPage accepts only nodes
+          After that I read the Javadocs which mentioned that printPage accepts only nodes
           Then I got an idea to convert receiptArea to a node
          */
         Node node = new Text(receiptArea.getText());
@@ -262,5 +274,25 @@ public class MainController implements Initializable {
         } catch (IOException | URISyntaxException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void onSettingsClick() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("settings.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 270, 125, Color.BLACK);
+        Stage stage = new Stage();
+        stage.setResizable(false);
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setOpacity(1);
+        stage.setTitle("My New Stage Title");
+        stage.setScene(scene); // Use the existing scene
+        stage.showAndWait();
+    }
+
+    public String getCompanyName() {
+        Company company = serializeData.deserializationCompany();
+        if (company == null) {
+            return null;
+        }
+        return company.getCompanyName();
     }
 }

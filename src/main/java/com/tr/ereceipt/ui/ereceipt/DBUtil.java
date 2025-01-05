@@ -9,7 +9,18 @@ import java.sql.*;
 * https://www.swtestacademy.com/database-operations-javafx/
 */
 
-// Don't forget to commit your database when creating and inserting values in it
+/*
+ * Manually Adding the JAR (If not using a build tool):
+ * Download the ojdbc8.jar from the Oracle website.
+ * Place the JAR file in a suitable location within your project, such as a libs directory.
+ *
+ * Add the JAR to your project classpath:
+ *      Eclipse: Right-click your project > Properties > Java Build Path > Libraries > Add JARs...
+ *      and select the ojdbc8.jar.
+ *      IntelliJ IDEA: File > Project Structure > Modules > Dependencies > + > JARs or directories and select the ojdbc8.jar.
+ */
+
+// Remember to commit your database when creating and inserting values in it
 
 public class DBUtil {
     // JDBC Driver
@@ -41,7 +52,7 @@ public class DBUtil {
     public static Connection getConnection() throws SQLException {
         if (isDriverLoaded) {
             /* java.sql library has a class called DriverManager
-            *  Initialize of the driver connection is saved using getConnection
+            *  Initialize of the driver connection is saved using getConnection,
             *  which is a method in DriverManager class
             */
             con = DriverManager.getConnection(conStr, user, password);
